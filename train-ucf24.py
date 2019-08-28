@@ -30,6 +30,7 @@ from torch.optim.lr_scheduler import MultiStepLR
 
 
 
+
 def str2bool(v):
     return v.lower() in ("yes", "true", "t", "1")
 
@@ -55,8 +56,9 @@ parser.add_argument('--weight_decay', default=5e-4, type=float, help='Weight dec
 parser.add_argument('--gamma', default=0.1, type=float, help='Gamma update for SGD')
 parser.add_argument('--visdom', default=False, type=str2bool, help='Use visdom to for loss visualization')
 parser.add_argument('--vis_port', default=8097, type=int, help='Port for Visdom Server')
-parser.add_argument('--data_root', default='/mnt/mars-fast/datasets/', help='Location of VOC root directory')
-parser.add_argument('--save_root', default='/mnt/mars-gamma/datasets/', help='Location to save checkpoint models')
+parser.add_argument('--data_root', default='/home/wei/Documents/DATA/action/', help='Location of VOC root directory')
+parser.add_argument('--save_root', default='/home/wei/Documents/DATA/action/model/two-in-one/', help='Location to save checkpoint models')
+parser.add_argument('--base_vgg_cp',default='/home/wei/Documents/DATA/action/model/two-in-one/base_vgg16_checkpoint',help='vgg_checkpoint')
 parser.add_argument('--iou_thresh', default=0.5, type=float, help='Evaluation threshold')
 parser.add_argument('--conf_thresh', default=0.01, type=float, help='Confidence threshold for evaluation')
 parser.add_argument('--nms_thresh', default=0.45, type=float, help='NMS threshold')
@@ -116,7 +118,8 @@ def main():
     net.conf.apply(weights_init)
 
     print('Loading base network...')
-    net.vgg.load_state_dict(vgg_weights)
+    vgg_weights = os.path.join(args.base_vgg_cp, args.basenet)
+    net.vgg.load_state_dict(torch.load(vgg_weights))
 
     args.data_root += args.dataset + '/'
 
