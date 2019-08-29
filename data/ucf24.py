@@ -112,7 +112,9 @@ def make_lists(rootpath, imgtype, split=1, fulltest=False):
                 box = box.astype(np.float32)
                 box[2] += box[0]  #convert width to xmax
                 box[3] += box[1]  #converst height to ymax
+                # tube_labels indicates which parts have the position labels
                 tube_labels[frame_num, tubeid] = 1 #label+1  # change label in tube_labels matrix to 1 form 0
+                # tube boxes contain the matched bbox position
                 tube_boxes[frame_num][tubeid] = box  # put the box in matrix of lists
 
         possible_frame_nums = np.arange(0, lastf, step)
